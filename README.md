@@ -1,8 +1,9 @@
+# Arpa Admin Panel (arpa-fe)
+
 Arpa Admin Panel is application to manage user, product, category, and order for Arpa E-Commerce. Built with Next.JS v15 with app router.
 
 Styling with Shadcn/ui
 
-# Getting Started
 ## Prerequisites
 
 Make sure you have the following installed on your machine:
@@ -20,10 +21,13 @@ git clone https://github.com/faizalabdulhakim/arpa-fe.git
 ```
 
 install depedencies
+
 ```
 npm install --legacy-peer-deps
 ```
+
 setting `.env`
+
 ```
 NEXT_PUBLIC_APP_URL=http://localhost:5000
 NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
@@ -39,6 +43,7 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Features
+
 - Login
 - Dark Mode
 - Responsive design across devices
@@ -50,4 +55,5 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - Create Read Update Order
 
 ## TODO Features
+
 - Edit User
