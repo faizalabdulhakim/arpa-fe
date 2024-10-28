@@ -118,23 +118,22 @@ export default function AddProduct() {
   // GET CATEGORY DATA
   const [data, setData] = useState<{ id: string; name: string }[]>([]);
 
-  const fetchCategoryData = async () => {
-    const token = (await getSession())?.access_token;
-
-    const response = await fetch(`${apiUrl}/categories`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const result = await response.json();
-    setData(result.categories);
-  };
-
   useEffect(() => {
+    const fetchCategoryData = async () => {
+      const token = (await getSession())?.access_token;
+
+      const response = await fetch(`${apiUrl}/categories`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const result = await response.json();
+      setData(result.categories);
+    };
     fetchCategoryData();
-  }, []);
+  }, [apiUrl]);
 
   return (
     <div className="min-h-[100vh] flex flex-col gap-4 p-4">

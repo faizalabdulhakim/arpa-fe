@@ -26,7 +26,7 @@ const formSchema = z.object({
   }),
 });
 
-export default function Page({ params }: { params: { id: string } }) {
+export default function Page({ params }: any) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -34,31 +34,34 @@ export default function Page({ params }: { params: { id: string } }) {
     },
   });
 
-  const fetchCategoryData = async () => {
-    const token = (await getSession())?.access_token;
-    const { id } = await params;
-
-    const response = await fetch(`${apiUrl}/categories/${id}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const category = await response.json();
-    if (response.ok) {
-      form.reset(category); // Populate form with fetched product data
-    } else {
-      toast({
-        description: "Failed to fetch category data",
-        variant: "destructive",
-      });
-    }
-  };
-
   const { toast } = useToast();
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchCategoryData = async () => {
+      const token = (await getSession())?.access_token;
+      const { id } = await params;
+
+      const response = await fetch(`${apiUrl}/categories/${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const category = await response.json();
+      if (response.ok) {
+        form.reset(category); // Populate form with fetched product data
+      } else {
+        toast({
+          description: "Failed to fetch category data",
+          variant: "destructive",
+        });
+      }
+    };
+    fetchCategoryData();
+  }, [apiUrl, form, params, toast]);
 
   // SUBMIT FORM
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -86,10 +89,6 @@ export default function Page({ params }: { params: { id: string } }) {
       });
     }
   }
-
-  useEffect(() => {
-    fetchCategoryData();
-  }, []);
 
   return (
     <div className="min-h-[100vh] flex flex-col gap-4 p-4">

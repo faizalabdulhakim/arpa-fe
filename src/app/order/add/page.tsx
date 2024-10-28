@@ -53,7 +53,7 @@ export default function AddOrder() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       user_id: "",
-      products: [{ product_id: "", quantity: 1 }],
+      products: [{ product_id: "", quantity: "0" }],
     },
   });
 
@@ -71,27 +71,27 @@ export default function AddOrder() {
   }
 
   const [userData, setUserData] = useState<User[]>([]);
-  const [user_id, setUser_id] = useState("");
 
-  const fetchUserData = async () => {
-    const token = (await getSession())?.access_token;
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = (await getSession())?.access_token;
 
-    const response = await fetch(`${apiUrl}/users`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+      const response = await fetch(`${apiUrl}/users`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    const result = await response.json();
-    setUserData(result.users);
-  };
+      const result = await response.json();
+      setUserData(result.users);
+    };
+    fetchUserData();
+  }, [apiUrl]);
 
   // SUBMIT FORM
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const token = (await getSession())?.access_token;
-
-    console.log(values);
 
     const response = await fetch(`${apiUrl}/orders`, {
       method: "POST",
@@ -117,24 +117,23 @@ export default function AddOrder() {
   }
 
   const [productData, setProductData] = useState<Product[]>([]);
-  const fetchProductData = async () => {
-    const token = (await getSession())?.access_token;
-
-    const response = await fetch(`${apiUrl}/products`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const result = await response.json();
-    setProductData(result.products);
-  };
 
   useEffect(() => {
-    fetchUserData();
+    const fetchProductData = async () => {
+      const token = (await getSession())?.access_token;
+
+      const response = await fetch(`${apiUrl}/products`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const result = await response.json();
+      setProductData(result.products);
+    };
     fetchProductData();
-  }, []);
+  }, [apiUrl]);
 
   return (
     <div className="min-h-[100vh] flex flex-col gap-4 p-4">
@@ -159,7 +158,6 @@ export default function AddOrder() {
                         value={field.value}
                         onValueChange={(value) => {
                           field.onChange(value);
-                          setUser_id(value as string);
                         }}
                       >
                         <SelectTrigger className="w-full">
@@ -245,7 +243,7 @@ export default function AddOrder() {
               <Button
                 type="button"
                 variant={"secondary"}
-                onClick={() => append({ product_id: "", quantity: 1 })}
+                onClick={() => append({ product_id: "", quantity: "0" })}
               >
                 <Plus />
                 Add Product

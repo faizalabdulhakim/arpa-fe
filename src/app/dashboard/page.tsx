@@ -12,26 +12,6 @@ export default function Dashboard() {
   const [totalOrder, setTotalOrder] = useState(0);
   const [totalCategory, setTotalCategory] = useState(0);
 
-  // const fetchData = useCallback(async (pageNumber = 1, pageSize = 10) => {
-  //   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  //   const token = (await getSession())?.access_token;
-  //   const offset = (pageNumber - 1) * pageSize;
-
-  //   const response = await fetch(
-  //     `${apiUrl}/users?offset=${offset}&limit=${pageSize}`,
-  //     {
-  //       method: "GET",
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     }
-  //   );
-
-  //   const result = await response.json();
-  //   setData(result.users);
-  //   setTotalRecords(result.total_record_count);
-  // }, []);
-
   useEffect(() => {
     const fetchData = async () => {
       const token = (await getSession())?.access_token;
@@ -45,7 +25,7 @@ export default function Dashboard() {
       setTotalUser(result.total_record_count);
     };
     fetchData();
-  }, []);
+  }, [apiUrl]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,7 +40,7 @@ export default function Dashboard() {
       setTotalProduct(result.total_record_count);
     };
     fetchData();
-  }, []);
+  }, [apiUrl]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,7 +55,7 @@ export default function Dashboard() {
       setTotalOrder(result.total_record_count);
     };
     fetchData();
-  }, []);
+  }, [apiUrl]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,7 +70,7 @@ export default function Dashboard() {
       setTotalCategory(result.total_record_count);
     };
     fetchData();
-  }, []);
+  }, [apiUrl]);
 
   return (
     <div className="min-h-[100vh] flex flex-col gap-4 p-4">

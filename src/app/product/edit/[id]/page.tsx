@@ -89,7 +89,7 @@ const formSchema = z.object({
     ),
 });
 
-export default function Page({ params }: { params: { id: string } }) {
+export default function Page({ params }: { params: any }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -107,27 +107,30 @@ export default function Page({ params }: { params: { id: string } }) {
   const router = useRouter();
 
   // Fetch the product details based on the ID
-  const fetchProductData = async () => {
-    const token = (await getSession())?.access_token;
-    const { id } = await params;
+  useEffect(() => {
+    const fetchProductData = async () => {
+      const token = (await getSession())?.access_token;
+      const { id } = await params;
 
-    const response = await fetch(`${apiUrl}/products/${id}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const product = await response.json();
-    if (response.ok) {
-      form.reset(product); // Populate form with fetched product data
-    } else {
-      toast({
-        description: "Failed to fetch product data",
-        variant: "destructive",
+      const response = await fetch(`${apiUrl}/products/${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
-    }
-  };
+
+      const product = await response.json();
+      if (response.ok) {
+        form.reset(product); // Populate form with fetched product data
+      } else {
+        toast({
+          description: "Failed to fetch product data",
+          variant: "destructive",
+        });
+      }
+    };
+    fetchProductData();
+  }, [apiUrl, form, params, toast]);
 
   // Submit the edited product
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -171,26 +174,22 @@ export default function Page({ params }: { params: { id: string } }) {
   // GET CATEGORY DATA
   const [data, setData] = useState<{ id: string; name: string }[]>([]);
 
-  const fetchCategoryData = async () => {
-    const token = (await getSession())?.access_token;
-
-    const response = await fetch(`${apiUrl}/categories`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const result = await response.json();
-    setData(result.categories);
-  };
-
   useEffect(() => {
-    fetchProductData();
-    fetchCategoryData();
-  }, []);
+    const fetchCategoryData = async () => {
+      const token = (await getSession())?.access_token;
 
-  console.log(data);
+      const response = await fetch(`${apiUrl}/categories`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const result = await response.json();
+      setData(result.categories);
+    };
+    fetchCategoryData();
+  }, [apiUrl]);
 
   return (
     <div className="min-h-[100vh] flex flex-col gap-4 p-4">
