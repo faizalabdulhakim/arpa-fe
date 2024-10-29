@@ -53,7 +53,7 @@ const ActionCell = ({ row }: { row: Row<User> }) => {
       .then((res) => {
         if (res.ok) {
           toast({ description: "User Promoted to Admin" });
-          router.refresh();
+          location.reload();
         } else {
           toast({
             description: "Error Promoting User",
