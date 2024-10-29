@@ -33,6 +33,8 @@ export async function login(access_token: string) {
     expires,
     httpOnly: true,
     path: "/",
+    secure: true,
+    sameSite: "strict",
   });
 }
 

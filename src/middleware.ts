@@ -14,7 +14,7 @@ const protectedRoutes = [
   "/category/*",
 ];
 const publicRoutes = ["/login"];
-const apiURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 export default async function middleware(req: NextRequest) {
   // 2. Check if the current route is protected or public
@@ -34,18 +34,22 @@ export default async function middleware(req: NextRequest) {
     isAuthenticated = response.ok;
   }
 
+  console.log("isAuthenticated", isAuthenticated);
+  console.log("isProtectedRoute", isProtectedRoute);
+  console.log("isPublicRoute", isPublicRoute);
+
   // 4. Redirect to /login if the user is not authenticated
-  if (isProtectedRoute && !isAuthenticated) {
-    return NextResponse.redirect(new URL("/login", req.nextUrl));
-  }
+  // if (isProtectedRoute && !isAuthenticated) {
+  //   return NextResponse.redirect(new URL("/login", req.nextUrl));
+  // }
 
   // 5. Redirect to /dashboard if the user is authenticated
-  if (isPublicRoute && isAuthenticated) {
-    // redirect to before login route
-    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
-  }
+  // if (isPublicRoute && isAuthenticated) {
+  //   // redirect to before login route
+  //   return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+  // }
 
-  return NextResponse.next();
+  // return NextResponse.next();
 }
 
 // Routes Middleware should not run on
